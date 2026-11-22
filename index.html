@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>Dom.uk Quiz Time</title>
+<title>Dom's Quiz Time</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -235,6 +235,17 @@
     border-width: 0 5px 5px 0;
     transform: translateY(-2px) rotate(45deg);
   }
+  .pick.waiting { opacity: .28; }
+  .pick.waiting input { cursor: not-allowed; }
+  .pick.locked .box,
+  .pick.locked input:checked + .box { background: #F3F0E8; transform: none; }
+  .pick.locked .box::after,
+  .pick.locked input:checked + .box::after {
+    content: "🔒"; font-size: 18px; width: auto; height: auto; border: 0; transform: none;
+  }
+  .team.turn { outline: 4px solid var(--sun); outline-offset: 3px; }
+  .team.flash { animation: flash .45s ease-in-out 3; }
+  @keyframes flash { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(1.04); } }
   .pick input:focus-visible + .box { outline: 3px solid var(--ink); outline-offset: 3px; }
 
   .feedback { margin: 18px 0 4px; min-height: 30px; text-align: center; max-width: 780px; }
@@ -257,6 +268,21 @@
   .final-row.t2 { background: var(--blue); }
   .winner-msg { font-size: clamp(22px, 6vw, 30px); font-weight: 700; line-height: 1.25; margin: 0 0 10px; }
   .loser-msg { font-size: clamp(18px, 4.6vw, 22px); color: var(--muted); margin: 0 0 26px; }
+
+  /* Bonus round */
+  .bonus-card { border-top: 10px solid var(--purple); }
+  .bonus-star { font-size: 64px; line-height: 1; color: var(--sun-dark); animation: bob 2s ease-in-out infinite; }
+  .bonus-title { font-size: clamp(40px, 11vw, 64px); margin: 8px 0 6px; color: var(--purple); }
+  .bonus-text { font-size: clamp(18px, 4.6vw, 22px); color: var(--muted); margin: 0 0 24px; }
+
+  /* Mute button */
+  .mute {
+    position: fixed; right: 14px; bottom: 14px; z-index: 20;
+    width: 48px; height: 48px; border-radius: 50%; border: 0;
+    background: var(--paper); box-shadow: 0 4px 0 rgba(43,45,66,.15);
+    font-size: 22px; cursor: pointer;
+  }
+  .mute:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
 
   /* Confetti */
   .confetti { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 10; }
@@ -286,8 +312,7 @@
 <!-- Home -->
 <section class="screen active" id="home">
   <div class="card">
-    <img src="logo.png" alt="Dom.uk" class="logo" onerror="this.hidden=true;this.nextElementSibling.hidden=false">
-    <div class="logo-text" hidden>Dom.uk</div>
+    <div class="logo-text">Dom's</div>
     <h1 class="title" aria-label="Quiz Time">
       <span class="c-red">Q</span><span class="c-blue">u</span><span class="c-sun">i</span><span class="c-green">z</span>
       <br>
@@ -299,22 +324,22 @@
 
 <!-- Team 1 name -->
 <section class="screen" id="team1">
-  <form class="card name-card" id="team1Form" autocomplete="off">
+  <div class="card name-card" id="team1Form">
     <label class="name-label" for="team1Input">Enter <span class="c-red">Team 1</span>’s name:</label>
-    <input class="name-input" id="team1Input" type="text" maxlength="20" required>
+    <input class="name-input" id="team1Input" type="text" maxlength="20" autocomplete="off">
     <div class="counter"><span id="team1Count">0</span>/20</div>
-    <button class="btn" type="submit" id="team1Next" disabled>Next</button>
-  </form>
+    <button class="btn" type="button" id="team1Next" disabled>Next</button>
+  </div>
 </section>
 
 <!-- Team 2 name -->
 <section class="screen" id="team2">
-  <form class="card name-card t2" id="team2Form" autocomplete="off">
+  <div class="card name-card t2" id="team2Form">
     <label class="name-label" for="team2Input">Enter <span class="c-blue">Team 2</span>’s name:</label>
-    <input class="name-input" id="team2Input" type="text" maxlength="20" required>
+    <input class="name-input" id="team2Input" type="text" maxlength="20" autocomplete="off">
     <div class="counter"><span id="team2Count">0</span>/20</div>
-    <button class="btn" type="submit" id="team2Next" disabled>Next</button>
-  </form>
+    <button class="btn" type="button" id="team2Next" disabled>Next</button>
+  </div>
 </section>
 
 <!-- Quiz -->
@@ -332,11 +357,22 @@
   <div class="actions"><button class="btn" id="submitBtn" disabled>Submit</button></div>
 </section>
 
+<!-- Bonus round intro -->
+<section class="screen" id="bonus">
+  <div class="card bonus-card">
+    <div class="bonus-star" aria-hidden="true">★</div>
+    <h2 class="bonus-title">Bonus round</h2>
+    <p class="bonus-text">2 more general knowledge questions. Every point counts!</p>
+    <button class="btn" id="bonusBtn">Let's go</button>
+  </div>
+</section>
+
+<button class="mute" id="muteBtn" aria-label="Sound on" title="Sound on or off">🔊</button>
+
 <!-- Final -->
 <section class="screen" id="final">
   <div class="card">
-    <img src="logo.png" alt="Dom.uk" class="logo" onerror="this.hidden=true;this.nextElementSibling.hidden=false">
-    <div class="logo-text" hidden>Dom.uk</div>
+    <div class="logo-text">Dom's</div>
     <h2 class="final-title">Final scores</h2>
     <div class="final-scores">
       <div class="final-row" id="final1"></div>
@@ -352,64 +388,68 @@
   // Answer index: A = 0, B = 1, C = 2, D = 3
   const ROUNDS = [
     { topic: "General knowledge", questions: [
-      ["How many days are there in a leap year?", ["364", "365", "366", "367"], 2],
-      ["What colour do you get when you mix blue and yellow paint?", ["Purple", "Green", "Orange", "Brown"], 1],
-      ["How many sides does a hexagon have?", ["6", "5", "8", "7"], 0],
-      ["Who wrote the Harry Potter books?", ["Roald Dahl", "David Walliams", "Jacqueline Wilson", "J.K. Rowling"], 3],
-      ["Which English king had six wives?", ["Richard III", "Henry VIII", "Edward VI", "George III"], 1],
-      ["Big Ben is the bell inside which London tower?", ["Victoria Tower", "Albert Tower", "Elizabeth Tower", "Tower of London"], 2],
-      ["What does \"www\" stand for in a website address?", ["World Wide Web", "World Web Wire", "Wide World Web", "Web World Wide"], 0],
-      ["In which year did the Titanic sink?", ["1898", "1926", "1945", "1912"], 3],
-      ["In which year was the Battle of Hastings?", ["1215", "1066", "1415", "1666"], 1],
-      ["Which language has the most native speakers in the world?", ["English", "Spanish", "Hindi", "Mandarin Chinese"], 3]
-    ]},
-    { topic: "Geography", questions: [
-      ["Edinburgh is the capital city of which country?", ["Wales", "England", "Scotland", "Northern Ireland"], 2],
-      ["Which country is shaped like a boot?", ["Italy", "Spain", "Greece", "Portugal"], 0],
-      ["Which ocean lies between the UK and the USA?", ["Pacific", "Indian", "Arctic", "Atlantic"], 3],
-      ["How many continents are there?", ["5", "7", "6", "8"], 1],
-      ["What is the highest mountain in the UK?", ["Scafell Pike", "Yr Wyddfa (Snowdon)", "Ben Nevis", "Slieve Donard"], 2],
-      ["What is the longest river in the UK?", ["River Severn", "River Thames", "River Trent", "River Tyne"], 0],
-      ["Which is the biggest country in the world by area?", ["Canada", "China", "USA", "Russia"], 3],
-      ["Mount Everest sits on the border of China and which other country?", ["India", "Nepal", "Bhutan", "Pakistan"], 1],
-      ["What is the capital city of Australia?", ["Sydney", "Melbourne", "Canberra", "Perth"], 2],
-      ["Which country has the most people?", ["China", "India", "USA", "Indonesia"], 1]
-    ]},
-    { topic: "Sport", questions: [
-      ["How many players does each football team have on the pitch?", ["10", "11", "9", "12"], 1],
-      ["What is the name of Liverpool's home stadium?", ["Anfield", "Goodison Park", "Old Trafford", "Villa Park"], 0],
-      ["What is the name of Man City's home stadium?", ["Emirates Stadium", "Maine Road", "Etihad Stadium", "Stamford Bridge"], 2],
-      ["Which famous tennis tournament is played on grass in London?", ["US Open", "French Open", "Australian Open", "Wimbledon"], 3],
-      ["Which song do Liverpool fans sing as their anthem?", ["Blue Moon", "Sweet Caroline", "You'll Never Walk Alone", "Abide With Me"], 2],
-      ["How many points is a try worth in rugby union?", ["3", "5", "4", "7"], 1],
-      ["Which Man City striker set the Premier League record of 36 goals in one season in 2022-23?", ["Martin Ødegaard", "Ole Gunnar Solskjær", "Alexander Sørloth", "Erling Haaland"], 3],
-      ["Which Egyptian forward joined Liverpool from Roma in 2017?", ["Sadio Mané", "Mohamed Salah", "Riyad Mahrez", "Mohamed Elneny"], 1],
-      ["In snooker, how many points is the black ball worth?", ["7", "5", "6", "8"], 0],
-      ["Man City set a record by winning how many Premier League titles in a row, from 2020-21 to 2023-24?", ["2", "3", "4", "5"], 2]
+      ["How many minutes are there in a day?", ["1,240", "1,440", "1,560", "2,400"], 1],
+      ["In which city is the Statue of Liberty?", ["Washington DC", "Boston", "Chicago", "New York"], 3],
+      ["Who wrote A Christmas Carol?", ["Charles Dickens", "Jane Austen", "Roald Dahl", "Lewis Carroll"], 0],
+      ["What is the largest mammal in the world?", ["African elephant", "Sperm whale", "Blue whale", "Giraffe"], 2],
+      ["What is 15% of 200?", ["15", "30", "20", "35"], 1],
+      ["Which superhero's secret identity is Bruce Wayne?", ["Superman", "Iron Man", "Spider-Man", "Batman"], 3],
+      ["How many strings does a standard guitar have?", ["6", "4", "5", "8"], 0],
+      ["In the Harry Potter books, what is the name of Harry's owl?", ["Errol", "Crookshanks", "Hedwig", "Fawkes"], 2]
     ]},
     { topic: "Science", questions: [
-      ["What is the largest planet in our solar system?", ["Saturn", "Jupiter", "Neptune", "Earth"], 1],
-      ["At what temperature does water freeze?", ["0°C", "10°C", "-10°C", "100°C"], 0],
-      ["How many legs does a spider have?", ["6", "10", "8", "12"], 2],
-      ["Which gas do humans need to breathe in to stay alive?", ["Carbon dioxide", "Helium", "Nitrogen", "Oxygen"], 3],
-      ["What is the name of the process plants use to make food from sunlight?", ["Respiration", "Photosynthesis", "Evaporation", "Digestion"], 1],
-      ["What is the chemical symbol for gold?", ["Ag", "Gd", "Au", "Go"], 2],
-      ["Which planet is closest to the Sun?", ["Mercury", "Venus", "Mars", "Earth"], 0],
-      ["What is the hardest natural substance on Earth?", ["Iron", "Granite", "Quartz", "Diamond"], 3],
-      ["How many bones are in an adult human body?", ["186", "226", "206", "256"], 2],
-      ["Roughly how fast does light travel?", ["3,000 km per second", "300,000 km per second", "30,000 km per second", "3,000,000 km per second"], 1]
+      ["What is H2O better known as?", ["Water", "Hydrogen peroxide", "Salt", "Oxygen"], 0],
+      ["Which force pulls objects towards the ground?", ["Friction", "Gravity", "Magnetism", "Air resistance"], 1],
+      ["What is the largest organ in the human body?", ["Liver", "Heart", "Skin", "Brain"], 2],
+      ["Which planet is famous for its large rings?", ["Jupiter", "Mars", "Neptune", "Saturn"], 3],
+      ["At what temperature does water boil at sea level?", ["90°C", "100°C", "110°C", "212°C"], 1],
+      ["Which blood vessels carry blood away from the heart?", ["Arteries", "Veins", "Capillaries", "Valves"], 0],
+      ["What is the chemical symbol for iron?", ["Ir", "In", "Fr", "Fe"], 3],
+      ["Which state of matter has a fixed volume but no fixed shape?", ["Solid", "Gas", "Liquid", "Plasma"], 2]
+    ]},
+    { topic: "Football", questions: [
+      ["How long is a normal football match, not counting stoppage time?", ["80 minutes", "90 minutes", "100 minutes", "120 minutes"], 1],
+      ["Which country won the 2022 World Cup?", ["France", "Brazil", "Argentina", "Croatia"], 2],
+      ["Which club is nicknamed \"The Gunners\"?", ["Arsenal", "Chelsea", "Tottenham", "West Ham"], 0],
+      ["Which club plays its home games at Old Trafford?", ["Man City", "Everton", "Leeds United", "Man Utd"], 3],
+      ["Who was Liverpool's manager when they won the Premier League in 2019-20?", ["Arne Slot", "Jürgen Klopp", "Rafael Benítez", "Brendan Rodgers"], 1],
+      ["Who managed Man City when they won the treble in 2022-23?", ["Pep Guardiola", "Roberto Mancini", "Manuel Pellegrini", "Mikel Arteta"], 0],
+      ["How many points does a team get for a win in the Premier League?", ["1", "2", "4", "3"], 3],
+      ["What is the award for the Premier League's top scorer called?", ["Golden Ball", "Golden Glove", "Golden Boot", "Silver Boot"], 2]
+    ]},
+    { topic: "History", questions: [
+      ["Which ancient people built the pyramids at Giza?", ["Romans", "Greeks", "Egyptians", "Vikings"], 2],
+      ["Which Roman wall was built across northern England?", ["Antonine Wall", "Hadrian's Wall", "Offa's Dyke", "London Wall"], 1],
+      ["In which year did the Second World War end?", ["1945", "1939", "1942", "1950"], 0],
+      ["Which British monarch reigned for the longest?", ["Victoria", "Elizabeth I", "Anne", "Elizabeth II"], 3],
+      ["Who was caught trying to blow up Parliament in 1605?", ["Oliver Cromwell", "Guy Fawkes", "Walter Raleigh", "Francis Drake"], 1],
+      ["The Black Death of the 1300s was an outbreak of which disease?", ["Smallpox", "Cholera", "Bubonic plague", "Measles"], 2],
+      ["Who was the UK Prime Minister for most of the Second World War?", ["Winston Churchill", "Neville Chamberlain", "Clement Attlee", "Margaret Thatcher"], 0],
+      ["In which year was the Great Fire of London?", ["1066", "1566", "1766", "1666"], 3]
+    ]},
+    { topic: "Geography", questions: [
+      ["What is the capital city of Spain?", ["Barcelona", "Madrid", "Seville", "Valencia"], 1],
+      ["On which continent is Egypt?", ["Asia", "Europe", "Africa", "South America"], 2],
+      ["In which country is the city of Rio de Janeiro?", ["Brazil", "Argentina", "Mexico", "Portugal"], 0],
+      ["What is the capital city of Wales?", ["Swansea", "Newport", "Bangor", "Cardiff"], 3],
+      ["Which is the largest ocean in the world?", ["Atlantic", "Indian", "Pacific", "Arctic"], 2],
+      ["In which country is Mount Kilimanjaro?", ["Kenya", "Tanzania", "Uganda", "Ethiopia"], 1],
+      ["What is the line at 0 degrees longitude, running through Greenwich, called?", ["Prime Meridian", "Equator", "International Date Line", "Tropic of Cancer"], 0],
+      ["Which Scottish city is known as the \"Granite City\"?", ["Edinburgh", "Glasgow", "Dundee", "Aberdeen"], 3]
     ]},
     { topic: "Food", questions: [
-      ["Which country does pizza come from?", ["Italy", "France", "Greece", "Spain"], 0],
-      ["Chocolate is made from which bean?", ["Coffee bean", "Cocoa bean", "Vanilla pod", "Peanut"], 1],
-      ["What is the main ingredient in guacamole?", ["Cucumber", "Pea", "Avocado", "Courgette"], 2],
-      ["Which fish is most often served in British fish and chips?", ["Salmon", "Tuna", "Trout", "Cod"], 3],
-      ["What is Italian ice cream called?", ["Gelato", "Sorbet", "Panna cotta", "Biscotti"], 0],
-      ["Spaghetti bolognese is named after which Italian city?", ["Rome", "Bologna", "Naples", "Milan"], 1],
-      ["Which three flavours make up Neapolitan ice cream?", ["Vanilla, mint, banana", "Chocolate, caramel, raspberry", "Strawberry, lemon, coffee", "Chocolate, vanilla, strawberry"], 3],
-      ["Which Italian dessert's name means \"pick me up\"?", ["Cannoli", "Panna cotta", "Tiramisu", "Biscotti"], 2],
-      ["Which pasta's name means \"little worms\" in Italian?", ["Spaghetti", "Vermicelli", "Linguine", "Penne"], 1],
-      ["White chocolate is different from milk chocolate because it has no...", ["Cocoa butter", "Sugar", "Milk", "Cocoa solids"], 3]
+      ["Which type of pastry is used to make profiteroles?", ["Puff", "Shortcrust", "Choux", "Filo"], 2],
+      ["Which country does paella come from?", ["Italy", "Spain", "Portugal", "Mexico"], 1],
+      ["What is the main ingredient in hummus?", ["Chickpeas", "Lentils", "Kidney beans", "Peas"], 0],
+      ["Traditional Italian mozzarella is made from which animal's milk?", ["Cow", "Goat", "Sheep", "Water buffalo"], 3],
+      ["Which nut is used to make marzipan?", ["Peanut", "Almond", "Hazelnut", "Cashew"], 1],
+      ["Which country grows the most cocoa beans for chocolate?", ["Brazil", "Ghana", "Ivory Coast", "Switzerland"], 2],
+      ["What number is the classic British ice cream cone with a chocolate flake named after?", ["99", "66", "77", "88"], 0],
+      ["Which Italian city is pesto from?", ["Rome", "Venice", "Turin", "Genoa"], 3]
+    ]},
+    { topic: "General knowledge", bonus: true, questions: [
+      ["Which is the only mammal that can truly fly?", ["Flying squirrel", "Sugar glider", "Bat", "Flying fish"], 2],
+      ["What is the fastest land animal?", ["Lion", "Cheetah", "Pronghorn", "Greyhound"], 1]
     ]}
   ];
 
@@ -417,11 +457,75 @@
   const QUESTIONS = [];
   ROUNDS.forEach((round, r) => {
     round.questions.forEach((q, i) => {
-      QUESTIONS.push({ round: r + 1, topic: round.topic, num: i + 1, of: round.questions.length, text: q[0], options: q[1], answer: q[2] });
+      QUESTIONS.push({ round: r + 1, bonus: !!round.bonus, topic: round.topic, num: i + 1, of: round.questions.length, text: q[0], options: q[1], answer: q[2] });
     });
   });
 
   const LETTERS = ["A", "B", "C", "D"];
+
+  // Sound: made in the browser, no audio files needed
+  let audioCtx = null;
+  let muted = false;
+  try { muted = localStorage.getItem("quizMuted") === "1"; } catch (e) {}
+
+  function getAudio() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+    } catch (e) { audioCtx = null; }
+    return audioCtx;
+  }
+
+  function tone(ctx, freq, start, dur, type, vol, slideTo) {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, start);
+    if (slideTo) osc.frequency.exponentialRampToValueAtTime(slideTo, start + dur);
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(vol, start + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(start);
+    osc.stop(start + dur + 0.02);
+  }
+
+  // Reveal: quick electronic blip arpeggio
+  function playReveal() {
+    if (muted) return;
+    const ctx = getAudio(); if (!ctx) return;
+    const t = ctx.currentTime + 0.02;
+    tone(ctx, 523.25, t,        0.09, "square", 0.12);
+    tone(ctx, 783.99, t + 0.08, 0.09, "square", 0.12);
+    tone(ctx, 1046.5, t + 0.16, 0.22, "square", 0.12, 1568);
+  }
+
+  // Turn: soft two-note chime
+  function playTurn() {
+    if (muted) return;
+    const ctx = getAudio(); if (!ctx) return;
+    const t = ctx.currentTime + 0.02;
+    tone(ctx, 880, t, 0.12, "sine", 0.07);
+    tone(ctx, 1174.66, t + 0.1, 0.18, "sine", 0.06);
+  }
+
+  // Winner: electronic fanfare
+  function playFanfare() {
+    if (muted) return;
+    const ctx = getAudio(); if (!ctx) return;
+    const t = ctx.currentTime + 0.05;
+    const run = [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5, 1318.5];
+    run.forEach((f, i) => tone(ctx, f, t + i * 0.11, 0.12, "square", 0.1));
+    const end = t + run.length * 0.11 + 0.05;
+    [523.25, 659.25, 783.99, 1046.5].forEach(f => tone(ctx, f, end, 1.1, "sawtooth", 0.06));
+    tone(ctx, 1568, end, 1.1, "square", 0.05);
+  }
+
+  function updateMuteBtn() {
+    const b = $("muteBtn");
+    b.textContent = muted ? "🔇" : "🔊";
+    b.setAttribute("aria-label", muted ? "Sound off" : "Sound on");
+  }
   const state = { names: ["", ""], scores: [0, 0], index: 0, revealed: false };
   const $ = id => document.getElementById(id);
 
@@ -433,8 +537,16 @@
     if (input) setTimeout(() => input.focus(), 50);
   }
 
+  updateMuteBtn();
+  $("muteBtn").addEventListener("click", () => {
+    muted = !muted;
+    try { localStorage.setItem("quizMuted", muted ? "1" : "0"); } catch (e) {}
+    updateMuteBtn();
+    if (!muted) playReveal();
+  });
+
   // Home
-  $("startBtn").addEventListener("click", () => show("team1"));
+  $("startBtn").addEventListener("click", () => { getAudio(); show("team1"); });
 
   // Name entry
   function setupNameForm(n, nextScreen) {
@@ -445,12 +557,15 @@
       count.textContent = input.value.length;
       btn.disabled = input.value.trim() === "";
     });
-    $("team" + n + "Form").addEventListener("submit", e => {
-      e.preventDefault();
+    function go() {
       const name = input.value.trim();
       if (!name) return;
       state.names[n - 1] = name;
       nextScreen();
+    }
+    btn.addEventListener("click", go);
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); go(); }
     });
   }
   setupNameForm(1, () => show("team2"));
@@ -465,20 +580,21 @@
     $("t2Score").textContent = "0";
     renderQuestion();
     show("quiz");
+    beginTurn(state.first);
   }
 
   function renderQuestion() {
     const q = QUESTIONS[state.index];
     state.revealed = false;
-    $("roundLabel").textContent = "Round " + q.round + " - " + q.topic;
+    $("roundLabel").textContent = q.bonus ? "Bonus round" : q.topic;
     $("qCount").textContent = "Question " + q.num + " of " + q.of;
     $("questionText").textContent = q.text;
 
-    const hint = $("hint");
-    hint.textContent = "";
-    const b1 = document.createElement("b"); b1.className = "r"; b1.textContent = state.names[0];
-    const b2 = document.createElement("b"); b2.className = "b"; b2.textContent = state.names[1];
-    hint.append(b1, " picks on the left, ", b2, " picks on the right");
+    state.picks = [null, null];
+    state.first = state.index % 2 === 0 ? 1 : 2;
+    state.active = 0;
+    $("hint").textContent = "";
+    [1, 2].forEach(t => teamEl(t).classList.remove("turn", "flash"));
 
     const wrap = $("answers");
     wrap.innerHTML = "";
@@ -512,16 +628,71 @@
     input.name = "team" + team;
     input.value = i;
     input.setAttribute("aria-label", state.names[team - 1] + " picks " + LETTERS[i] + ", " + opt);
-    input.addEventListener("change", updateSubmit);
+    input.disabled = true;
+    input.addEventListener("change", () => onPick(team, i));
     const box = document.createElement("span");
     box.className = "box";
+    label.classList.add("waiting");
     label.append(input, box);
     return label;
   }
 
   function getPick(team) {
-    const el = document.querySelector('input[name="team' + team + '"]:checked');
-    return el ? Number(el.value) : null;
+    return state.picks ? state.picks[team - 1] : null;
+  }
+
+  function teamEl(team) { return document.querySelector(".team.t" + team); }
+
+  function setHint(team, text) {
+    const hint = $("hint");
+    hint.textContent = "";
+    if (team) {
+      const b = document.createElement("b");
+      b.className = team === 1 ? "r" : "b";
+      b.textContent = state.names[team - 1];
+      hint.append(b);
+    }
+    hint.append(text);
+  }
+
+  // A team's turn: flash their name, sound, unlock their boxes
+  function beginTurn(team) {
+    state.active = team;
+    document.querySelectorAll(".pick.t" + team).forEach(p => {
+      p.classList.remove("waiting");
+      p.querySelector("input").disabled = false;
+    });
+    [1, 2].forEach(t => teamEl(t).classList.toggle("turn", t === team));
+    const el = teamEl(team);
+    el.classList.remove("flash");
+    void el.offsetWidth;
+    el.classList.add("flash");
+    setHint(team, ", your turn. Pick an answer.");
+    playTurn();
+  }
+
+  // Lock a team's answer and hide which box they picked
+  function lockTeam(team) {
+    document.querySelectorAll(".pick.t" + team).forEach(p => {
+      p.classList.remove("waiting");
+      p.classList.add("locked");
+      p.querySelector("input").disabled = true;
+    });
+  }
+
+  function onPick(team, i) {
+    if (team !== state.active || state.revealed) return;
+    state.picks[team - 1] = i;
+    lockTeam(team);
+    if (state.picks[0] === null || state.picks[1] === null) {
+      beginTurn(team === 1 ? 2 : 1);
+    } else {
+      state.active = 0;
+      [1, 2].forEach(t => teamEl(t).classList.remove("turn"));
+      setHint(0, "Both answers locked in. Press Submit!");
+      playTurn();
+      updateSubmit();
+    }
   }
 
   function updateSubmit() {
@@ -547,6 +718,8 @@
     const p1 = getPick(1), p2 = getPick(2);
     if (p1 === null || p2 === null) return;
     state.revealed = true;
+    $("hint").textContent = "";
+    document.querySelectorAll("#answers .pick").forEach(p => p.classList.remove("locked", "waiting"));
 
     document.querySelectorAll("#answers input").forEach(inp => inp.disabled = true);
     document.querySelectorAll("#answers .answer").forEach(row => {
@@ -571,6 +744,7 @@
     else if (right2) who.textContent = state.names[1] + " gets the point!";
     else who.textContent = "Nobody got that one.";
     fb.append(ans, who);
+    playReveal();
 
     const btn = $("submitBtn");
     btn.disabled = false;
@@ -582,7 +756,10 @@
     state.index++;
     if (state.index >= QUESTIONS.length) { showFinal(); return; }
     renderQuestion();
+    const q = QUESTIONS[state.index];
+    if (q.bonus && q.num === 1) { show("bonus"); return; }
     window.scrollTo(0, 0);
+    beginTurn(state.first);
   }
 
   function showFinal() {
@@ -601,6 +778,7 @@
     }
     show("final");
     confetti();
+    playFanfare();
   }
 
   function confetti() {
@@ -618,6 +796,8 @@
     document.body.append(box);
     setTimeout(() => box.remove(), 7000);
   }
+
+  $("bonusBtn").addEventListener("click", () => { show("quiz"); beginTurn(state.first); });
 
   $("againBtn").addEventListener("click", () => {
     $("team1Input").value = state.names[0];

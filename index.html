@@ -362,7 +362,7 @@
   <div class="card bonus-card">
     <div class="bonus-star" aria-hidden="true">★</div>
     <h2 class="bonus-title">Bonus round</h2>
-    <p class="bonus-text">2 more general knowledge questions. Every point counts!</p>
+    <p class="bonus-text">2 current affairs questions from this month's news. Every point counts!</p>
     <button class="btn" id="bonusBtn">Let's go</button>
   </div>
 </section>
@@ -388,68 +388,68 @@
   // Answer index: A = 0, B = 1, C = 2, D = 3
   const ROUNDS = [
     { topic: "General knowledge", questions: [
-      ["How many minutes are there in a day?", ["1,240", "1,440", "1,560", "2,400"], 1],
-      ["In which city is the Statue of Liberty?", ["Washington DC", "Boston", "Chicago", "New York"], 3],
-      ["Who wrote A Christmas Carol?", ["Charles Dickens", "Jane Austen", "Roald Dahl", "Lewis Carroll"], 0],
-      ["What is the largest mammal in the world?", ["African elephant", "Sperm whale", "Blue whale", "Giraffe"], 2],
-      ["What is 15% of 200?", ["15", "30", "20", "35"], 1],
-      ["Which superhero's secret identity is Bruce Wayne?", ["Superman", "Iron Man", "Spider-Man", "Batman"], 3],
-      ["How many strings does a standard guitar have?", ["6", "4", "5", "8"], 0],
-      ["In the Harry Potter books, what is the name of Harry's owl?", ["Errol", "Crookshanks", "Hedwig", "Fawkes"], 2]
+      ["Which animal is known as the \"king of the jungle\"?", ["Lion", "Tiger", "Elephant", "Gorilla"], 0],
+      ["What is the capital city of Italy?", ["Milan", "Venice", "Naples", "Rome"], 3],
+      ["Which fruit is dried to make raisins?", ["Plums", "Grapes", "Cherries", "Apricots"], 1],
+      ["In which sport does \"love\" mean a score of zero?", ["Tennis", "Cricket", "Golf", "Badminton"], 0],
+      ["Which fictional detective lived at 221B Baker Street?", ["Hercule Poirot", "Miss Marple", "Inspector Morse", "Sherlock Holmes"], 3],
+      ["What is 7 x 8?", ["56", "54", "63", "48"], 0],
+      ["Which chocolate bar shares its name with our galaxy?", ["Mars", "Milky Way", "Twix", "Starbar"], 1],
+      ["In which country did the ancient Olympic Games begin?", ["Italy", "Egypt", "Greece", "Turkey"], 2],
+      ["What is a group of crows called?", ["A flock", "A parliament", "A murder", "A gaggle"], 2],
+      ["Which is the only letter that does not appear in the name of any US state?", ["J", "Q", "X", "Z"], 1]
     ]},
-    { topic: "Science", questions: [
-      ["What is H2O better known as?", ["Water", "Hydrogen peroxide", "Salt", "Oxygen"], 0],
-      ["Which force pulls objects towards the ground?", ["Friction", "Gravity", "Magnetism", "Air resistance"], 1],
-      ["What is the largest organ in the human body?", ["Liver", "Heart", "Skin", "Brain"], 2],
-      ["Which planet is famous for its large rings?", ["Jupiter", "Mars", "Neptune", "Saturn"], 3],
-      ["At what temperature does water boil at sea level?", ["90°C", "100°C", "110°C", "212°C"], 1],
-      ["Which blood vessels carry blood away from the heart?", ["Arteries", "Veins", "Capillaries", "Valves"], 0],
-      ["What is the chemical symbol for iron?", ["Ir", "In", "Fr", "Fe"], 3],
-      ["Which state of matter has a fixed volume but no fixed shape?", ["Solid", "Gas", "Liquid", "Plasma"], 2]
+    { topic: "Premier League", questions: [
+      ["How many teams play in the Premier League?", ["18", "20", "22", "24"], 1],
+      ["In which year did the Premier League start?", ["1992", "1988", "1996", "2000"], 0],
+      ["Which club is nicknamed \"The Toffees\"?", ["Fulham", "Brentford", "Crystal Palace", "Everton"], 3],
+      ["Which club won the 2015-16 Premier League after starting the season as 5,000-1 outsiders?", ["Leicester City", "Tottenham", "West Ham", "Southampton"], 0],
+      ["Which Man City player was named Premier League Player of the Season for 2023-24?", ["Rodri", "Kevin De Bruyne", "Phil Foden", "Erling Haaland"], 2],
+      ["Who was Liverpool's manager when they won the 2024-25 Premier League?", ["Jürgen Klopp", "Xabi Alonso", "Brendan Rodgers", "Arne Slot"], 3],
+      ["Which was the first club to be relegated from the Premier League after winning it?", ["Leeds United", "Aston Villa", "Blackburn Rovers", "Newcastle United"], 2]
     ]},
-    { topic: "Football", questions: [
-      ["How long is a normal football match, not counting stoppage time?", ["80 minutes", "90 minutes", "100 minutes", "120 minutes"], 1],
-      ["Which country won the 2022 World Cup?", ["France", "Brazil", "Argentina", "Croatia"], 2],
-      ["Which club is nicknamed \"The Gunners\"?", ["Arsenal", "Chelsea", "Tottenham", "West Ham"], 0],
-      ["Which club plays its home games at Old Trafford?", ["Man City", "Everton", "Leeds United", "Man Utd"], 3],
-      ["Who was Liverpool's manager when they won the Premier League in 2019-20?", ["Arne Slot", "Jürgen Klopp", "Rafael Benítez", "Brendan Rodgers"], 1],
-      ["Who managed Man City when they won the treble in 2022-23?", ["Pep Guardiola", "Roberto Mancini", "Manuel Pellegrini", "Mikel Arteta"], 0],
-      ["How many points does a team get for a win in the Premier League?", ["1", "2", "4", "3"], 3],
-      ["What is the award for the Premier League's top scorer called?", ["Golden Ball", "Golden Glove", "Golden Boot", "Silver Boot"], 2]
+    { topic: "Space flight", questions: [
+      ["Who was the first person to walk on the Moon?", ["Buzz Aldrin", "Michael Collins", "Neil Armstrong", "John Glenn"], 2],
+      ["What does ISS stand for?", ["Interstellar Space Ship", "International Satellite System", "Inner Solar Station", "International Space Station"], 3],
+      ["What is NASA's programme to send astronauts back to the Moon called?", ["Apollo", "Artemis", "Gemini", "Orion"], 1],
+      ["What was the name of the dog that became the first animal to orbit the Earth, in 1957?", ["Laika", "Belka", "Rex", "Sputnik"], 0],
+      ["Who became the first woman in space, in 1963?", ["Sally Ride", "Helen Sharman", "Mae Jemison", "Valentina Tereshkova"], 3],
+      ["Who became the first British person in space, visiting the Mir space station in 1991?", ["Tim Peake", "Michael Foale", "Helen Sharman", "Piers Sellers"], 2],
+      ["Which was the first space shuttle to fly into space, in 1981?", ["Challenger", "Columbia", "Discovery", "Atlantis"], 1]
     ]},
-    { topic: "History", questions: [
-      ["Which ancient people built the pyramids at Giza?", ["Romans", "Greeks", "Egyptians", "Vikings"], 2],
-      ["Which Roman wall was built across northern England?", ["Antonine Wall", "Hadrian's Wall", "Offa's Dyke", "London Wall"], 1],
-      ["In which year did the Second World War end?", ["1945", "1939", "1942", "1950"], 0],
-      ["Which British monarch reigned for the longest?", ["Victoria", "Elizabeth I", "Anne", "Elizabeth II"], 3],
-      ["Who was caught trying to blow up Parliament in 1605?", ["Oliver Cromwell", "Guy Fawkes", "Walter Raleigh", "Francis Drake"], 1],
-      ["The Black Death of the 1300s was an outbreak of which disease?", ["Smallpox", "Cholera", "Bubonic plague", "Measles"], 2],
-      ["Who was the UK Prime Minister for most of the Second World War?", ["Winston Churchill", "Neville Chamberlain", "Clement Attlee", "Margaret Thatcher"], 0],
-      ["In which year was the Great Fire of London?", ["1066", "1566", "1766", "1666"], 3]
+    { topic: "French", questions: [
+      ["What does \"bonjour\" mean in English?", ["Goodbye", "Please", "Good night", "Hello"], 3],
+      ["What is the French word for \"cat\"?", ["Chien", "Chapeau", "Chat", "Cheval"], 2],
+      ["What are the colours of the French flag?", ["Red, white and green", "Blue, yellow and red", "Blue, white and red", "Green, white and orange"], 2],
+      ["What does \"merci beaucoup\" mean?", ["Thank you very much", "You're welcome", "Excuse me", "See you soon"], 0],
+      ["What is the French word for Thursday?", ["Jeudi", "Mardi", "Vendredi", "Mercredi"], 0],
+      ["Which Paris museum is home to the Mona Lisa?", ["The Musée d'Orsay", "The Louvre", "The Pompidou Centre", "The Palace of Versailles"], 1],
+      ["What number is \"quatre-vingts\" in French?", ["24", "80", "40", "90"], 1]
     ]},
-    { topic: "Geography", questions: [
-      ["What is the capital city of Spain?", ["Barcelona", "Madrid", "Seville", "Valencia"], 1],
-      ["On which continent is Egypt?", ["Asia", "Europe", "Africa", "South America"], 2],
-      ["In which country is the city of Rio de Janeiro?", ["Brazil", "Argentina", "Mexico", "Portugal"], 0],
-      ["What is the capital city of Wales?", ["Swansea", "Newport", "Bangor", "Cardiff"], 3],
-      ["Which is the largest ocean in the world?", ["Atlantic", "Indian", "Pacific", "Arctic"], 2],
-      ["In which country is Mount Kilimanjaro?", ["Kenya", "Tanzania", "Uganda", "Ethiopia"], 1],
-      ["What is the line at 0 degrees longitude, running through Greenwich, called?", ["Prime Meridian", "Equator", "International Date Line", "Tropic of Cancer"], 0],
-      ["Which Scottish city is known as the \"Granite City\"?", ["Edinburgh", "Glasgow", "Dundee", "Aberdeen"], 3]
+    { topic: "Geometry Dash", questions: [
+      ["What shape is the default player icon in Geometry Dash?", ["A triangle", "A circle", "A star", "A cube"], 3],
+      ["What is the first main level in Geometry Dash?", ["Back On Track", "Stereo Madness", "Polargeist", "Dry Out"], 1],
+      ["How many secret coins are hidden in each numbered main level?", ["1", "2", "3", "5"], 2],
+      ["In which game mode do you hold to fly upwards and let go to drop?", ["Ship", "Ball", "Spider", "Robot"], 0],
+      ["Geometry Dash creator RobTop comes from which country?", ["Norway", "Sweden", "Germany", "Canada"], 1],
+      ["Which main level was the first to have Demon difficulty?", ["Clubstep", "Theory of Everything 2", "Deadlocked", "Electrodynamix"], 0],
+      ["Which new game mode arrived with update 2.2 in December 2023?", ["Spider", "Wave", "Robot", "Swing"], 3]
     ]},
-    { topic: "Food", questions: [
-      ["Which type of pastry is used to make profiteroles?", ["Puff", "Shortcrust", "Choux", "Filo"], 2],
-      ["Which country does paella come from?", ["Italy", "Spain", "Portugal", "Mexico"], 1],
-      ["What is the main ingredient in hummus?", ["Chickpeas", "Lentils", "Kidney beans", "Peas"], 0],
-      ["Traditional Italian mozzarella is made from which animal's milk?", ["Cow", "Goat", "Sheep", "Water buffalo"], 3],
-      ["Which nut is used to make marzipan?", ["Peanut", "Almond", "Hazelnut", "Cashew"], 1],
-      ["Which country grows the most cocoa beans for chocolate?", ["Brazil", "Ghana", "Ivory Coast", "Switzerland"], 2],
-      ["What number is the classic British ice cream cone with a chocolate flake named after?", ["99", "66", "77", "88"], 0],
-      ["Which Italian city is pesto from?", ["Rome", "Venice", "Turin", "Genoa"], 3]
+    { topic: "General knowledge", questions: [
+      ["How many wheels does a tricycle have?", ["2", "3", "4", "1"], 1],
+      ["Which bird is a symbol of peace?", ["Swan", "Robin", "Eagle", "Dove"], 3],
+      ["Which Disney film features the song \"Let It Go\"?", ["Moana", "Tangled", "Frozen", "Encanto"], 2],
+      ["Which Italian city is famous for its canals and gondolas?", ["Florence", "Venice", "Pisa", "Turin"], 1],
+      ["Who wrote Charlie and the Chocolate Factory?", ["Roald Dahl", "David Walliams", "Enid Blyton", "C.S. Lewis"], 0],
+      ["What is the capital city of Japan?", ["Kyoto", "Osaka", "Beijing", "Tokyo"], 3],
+      ["How many sides does a 50p coin have?", ["6", "8", "7", "9"], 2],
+      ["In Greek myths, who is the king of the gods?", ["Apollo", "Poseidon", "Hades", "Zeus"], 3],
+      ["After London, which UK city has the most people?", ["Manchester", "Glasgow", "Birmingham", "Leeds"], 2],
+      ["Which blood type can be given to almost anyone, so is called the universal donor?", ["O negative", "A positive", "AB positive", "B negative"], 0]
     ]},
-    { topic: "General knowledge", bonus: true, questions: [
-      ["Which is the only mammal that can truly fly?", ["Flying squirrel", "Sugar glider", "Bat", "Flying fish"], 2],
-      ["What is the fastest land animal?", ["Lion", "Cheetah", "Pronghorn", "Greyhound"], 1]
+    { topic: "Current affairs", bonus: true, questions: [
+      ["The COP31 climate summit was held this month in Antalya. Which country is Antalya in?", ["Turkey", "Greece", "Egypt", "Spain"], 0],
+      ["In the US midterm elections on 3 November, which party won control of the House of Representatives?", ["Republicans", "Democrats", "Greens", "Libertarians"], 1]
     ]}
   ];
 
